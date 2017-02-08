@@ -1,0 +1,24 @@
+{
+  "name": "chattyserver",
+  "version": "1.0.0",
+  "description": "A project to learn about WebSockets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ady0906/chattyserver.git"
+  },
+  "author": "Adrien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ady0906/chattyserver/issues"
+  },
+  "homepage": "https://github.com/ady0906/chattyserver#readme",
+  "dependencies": {
+    "express": "4.14.1",
+    "node-uuid": "1.4.7",
+    "ws": "2.0.3"
+  }
+}

@@ -33,6 +33,19 @@ wss.on('connection', (ws) => {
 
   console.log('Client connected');
 
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+
+  let newUserColorId = uuid.v4();
+  let bunchOfColors = {};
+  bunchOfColors[newUserColorId] = getRandomColor();
+
   Object.size = function(obj) {
     var size = 0, key;
     for (key in obj) {
@@ -44,6 +57,9 @@ wss.on('connection', (ws) => {
   let usersConnected = {id: uuid.v4(), type: 'howMany', usersRN: wss.clients.size};
   wss.broadcast(JSON.stringify(usersConnected));
 
+
+
+
   ws.on('message', function incoming(message) {
     let data = JSON.parse(message);
 
@@ -52,6 +68,7 @@ wss.on('connection', (ws) => {
 
       data.id = uuid.v4();
       data.type = 'incomingMessage';
+      data.fontColor = {'color': bunchOfColors[newUserColorId]};
       console.log(`User ${data.username} said, ${data.content}`);
       wss.broadcast(JSON.stringify(data));
 

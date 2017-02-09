@@ -33,15 +33,42 @@ wss.on('connection', (ws) => {
 
   console.log('Client connected');
 
-  ws.on('message', function incoming(message) {
+  Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+  };
 
+  let usersConnected = {id: uuid.v4(), type: 'howMany', usersRN: wss.clients.size};
+  wss.broadcast(JSON.stringify(usersConnected));
+
+  ws.on('message', function incoming(message) {
     let data = JSON.parse(message);
-    data.id = uuid.v4();
-    console.log(`User ${data.username} said, ${data.content}`);
-    wss.broadcast(JSON.stringify(data));
+
+    // that's where the conditional components should come to differentiate b/w messages and notifications
+    if (data.type === 'postMessage') {
+
+      data.id = uuid.v4();
+      data.type = 'incomingMessage';
+      console.log(`User ${data.username} said, ${data.content}`);
+      wss.broadcast(JSON.stringify(data));
+
+    } else if (data.type === 'postNotification') {
+
+      data.id = uuid.v4();
+      data.type = 'incomingNotification';
+
+      wss.broadcast(JSON.stringify(data));
+    }
 
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected');
+    let usersDisonnected = {id: uuid.v4(), type: 'howMany', usersRN: wss.clients.size};
+    wss.broadcast(JSON.stringify(usersDisonnected));
+  })
 });

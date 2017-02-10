@@ -58,31 +58,28 @@ wss.on('connection', (ws) => {
   wss.broadcast(JSON.stringify(usersConnected));
 
 
-
+// funnel messages from client into different pathes depending on type
 
   ws.on('message', function incoming(message) {
     let data = JSON.parse(message);
 
-    // that's where the conditional components should come to differentiate b/w messages and notifications
     if (data.type === 'postMessage') {
 
       data.id = uuid.v4();
       data.type = 'incomingMessage';
       data.fontColor = {'color': bunchOfColors[newUserColorId]};
-      console.log(`User ${data.username} said, ${data.content}`);
       wss.broadcast(JSON.stringify(data));
 
     } else if (data.type === 'postNotification') {
 
       data.id = uuid.v4();
       data.type = 'incomingNotification';
-
       wss.broadcast(JSON.stringify(data));
     }
-
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
+  
   ws.on('close', () => {
     console.log('Client disconnected');
     let usersDisonnected = {id: uuid.v4(), type: 'howMany', usersRN: wss.clients.size};

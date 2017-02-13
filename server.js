@@ -7,13 +7,15 @@ const uuid = require('node-uuid');
 // Set the port to 4000
 const PORT = 4001;
 
-// Create a new express server
-const server = express()
-   // Make the express server serve static assets (html, javascript, css) from the /public folder
-  .use(express.static('public'))
-  .listen(PORT, 'localhost', () => console.log(`Listening on ${ PORT }`));
+//
+// // Create a new express server
+// const server = express()
+//    // Make the express server serve static assets (html, javascript, css) from the /public folder
+//   .use(express.static('public'))
+//   .listen(PORT, 'localhost', () => console.log(`Listening on ${ PORT }`));
+//
+// // Create the WebSockets server
 
-// Create the WebSockets server
 const wss = new WebSocket.Server({ port: PORT });
 
 // Set up a callback that will run when a client connects to the server
@@ -79,7 +81,7 @@ wss.on('connection', (ws) => {
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  
+
   ws.on('close', () => {
     console.log('Client disconnected');
     let usersDisonnected = {id: uuid.v4(), type: 'howMany', usersRN: wss.clients.size};
